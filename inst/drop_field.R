@@ -2,19 +2,11 @@
 # drop <- c("abstract", "keywords", "file")
 
 
-select_entry <- function(lines, drop = "abstract"){
-  lab <- "^@(.*)\\{(.*)\\,$"
-  idx <- cumsum(grepl(lab, lines))
-  if (idx[1] == 0) {
-    idx = c(0, idx)
-    lines = c("", lines)
-  }
-  groups <- unname(split(lines, idx))
-  labels <- stringr::str_trim(gsub(lab, "\\2", sapply(groups, `[`, 1)))
-  entries <- setNames(groups, labels)
-  
+drop_field <- function(entries, drop = "abstract"){
+
+
   # entry <- entries[[2]]
-  
+
   foreach_entry <- function(entry){
     fie <- "^(.*)=\\s*\\{{1}(.*)\\}{1},?$"
     fields <- stringr::str_trim(gsub(fie, "\\1", entry))
@@ -30,7 +22,7 @@ select_entry <- function(lines, drop = "abstract"){
     return(entry)
   }
   entries <- lapply(entries, foreach_entry)
-  output <- do.call(base::c, unname(entries))
-  return(output)
+
+  return(entries)
   # write(output, "../Reference.bib")
 }
