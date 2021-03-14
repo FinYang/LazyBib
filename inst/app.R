@@ -90,7 +90,7 @@ server <- function(input, output) {
             paste0("LazyBib_",input$file$name)
         },
         content = function(file){
-            write(dothejob(), file)
+            write(dothejob()[[1]], file)
         }
     )
 }
