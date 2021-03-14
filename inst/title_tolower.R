@@ -1,7 +1,7 @@
 
 title_tolower <- function(entries){
   foreach_entry <- function(entry){
-    fie <- "^(.*)=\\s*\\{{1}(.*)\\}{1},?$"
+    fie <- "^(.*)=\\s*\\{{0,1}(.*)\\}{0,1},?$"
     fields <- stringr::str_trim(gsub(fie, "\\1", entry))
     title_index <- which("title" == fields)
     title <- gsub(fie, "\\2", entry[title_index])

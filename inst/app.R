@@ -8,10 +8,11 @@
 #
 
 library(shiny)
-
+library(tidyverse)
 source("select_entries.R")
 source("drop_field.R")
 source("title_tolower.R")
+source("rm_repetition.R")
 
 fields <- c("abstract", "address", "annote", "author", "booktitle",
             "chapter", "crossref", "edition", "editor", "file", "howpublished",
@@ -34,7 +35,11 @@ ui <- navbarPage(
             checkboxInput("title2lower",
                           "Do you want to convert the upper cases in titles to lower cases, except the initial of the first word and abbreviation?",
                           value = TRUE),
-            actionButton("execute", "Execute")
+            checkboxInput("rmrep",
+                          "Do you want to remove repeated entries? Repetition determined by repeated Bibtexkey.",
+                          value = TRUE),
+            actionButton("execute", "Execute"),
+            verbatimTextOutput("rm_Bibtexkey")
         ),
         mainPanel(
             downloadButton("download"),
@@ -59,15 +64,26 @@ server <- function(input, output) {
     dothejob <- eventReactive(input$execute, {
         entries <- select_entry(file())
         entries <- drop_field(entries, input$drop)
+        rm_Bibtexkey <- NULL
         if(input$title2lower)
             entries <- title_tolower(entries)
-        return(end_operation(entries))
+        if(input$rmrep){
+            tem <- rm_repetition(entries)
+            entries <- tem[[1]]
+            rm_Bibtexkey <- tem[[2]]
+        }
+        return(list(end_operation(entries), rm_Bibtexkey))
     })
-
-
     output$test <- renderPrint({
-        cat(paste(dothejob(), collapse = "\r"))
+        cat(paste(dothejob()[[1]], collapse = "\r"))
     })
+
+    output$rm_Bibtexkey <- renderPrint({
+        tem <- dothejob()
+        if(length(tem)>1)
+            cat(("Removed Extra Bibtexkey:\r"), paste(tem[[2]], collapse = "\r"))
+    })
+
 
     output$download <- downloadHandler(
         filename = function(){
