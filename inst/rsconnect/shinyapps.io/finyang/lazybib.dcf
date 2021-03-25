@@ -5,6 +5,6 @@ account: finyang
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 1655710
-bundleId: 2727904
+bundleId: 4392418
 url: https://finyang.shinyapps.io/lazybib/
-when: 1579011775.06545
+when: 1616652932.19443
