@@ -9,7 +9,7 @@ select_entry <- function(lines){
   groups <- unname(split(lines, idx))
   labels <- stringr::str_trim(gsub(lab, "\\2", sapply(groups, `[`, 1)))
   entries <- setNames(groups, labels)
-  entries <- entries[-which(stringr::str_length(labels)<1)]
+  # entries <- entries[-which(stringr::str_length(labels)<1)]
   return(entries)
 }
 
