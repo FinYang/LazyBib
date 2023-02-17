@@ -1,13 +1,22 @@
 Package: LazyBib
-Title: What the Package Does (One Line, Title Case)
+Title: Bib File Wrangling
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "Yangzhuoran Fin",
+           family = "Yang",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: What license it uses
+           email = "yangyangzhuoran@gmail.com",
+           comment = c(ORCID = "0000-0002-1232-8017"))
+Description: Bib file wrangling.
+License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
+Imports: 
+    magrittr,
+    pkgload,
+    shiny,
+    shinythemes,
+    stats,
+    stringr,
+    xfun
+RoxygenNote: 7.2.3
