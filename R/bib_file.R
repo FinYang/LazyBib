@@ -14,11 +14,12 @@ bibkey.default <- function(x){
 bibkey.lazyqmd <- function(x){
   ref_tag <- unlist(stringr::str_extract_all(x$lines[!x$yaml], "@[[:alnum:]|-]+"))
   ref_tag[!stringr::str_detect(ref_tag, "^@(tbl|sec|fig|eq)-")] %>%
+    unique() %>%
     gsub("@", "", .)
 }
 
 #' @export
-subset_bib <- function(in_file, out_file = NULL, bibkey = NULL, force = TRUE){
+subset_bib <- function(in_file, out_file = NULL, bibkey = NULL, force = FALSE){
   stopifnot(tools::file_ext(in_file)=="bib")
   if(is.null(out_file)) out_file <- file.path(dirname(in_file), paste0("subset_", basename(in_file)))
   if(file.exists(out_file) & (!force)) stop(paste(out_file, "exists"))
