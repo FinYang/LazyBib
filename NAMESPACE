@@ -2,7 +2,11 @@
 
 S3method(bibkey,default)
 S3method(bibkey,lazyqmd)
+S3method(lazybib,character)
+S3method(lazybib,list)
 export(bibkey)
+export(lazybib)
+export(select_entry)
 export(subset_bib)
 import(shiny)
 importFrom(magrittr,"%>%")

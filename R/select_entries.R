@@ -1,4 +1,4 @@
-
+#' @export
 select_entry <- function(lines){
   lab <- "^@(.*)\\{(.*)\\,$"
   idx <- cumsum(grepl(lab, lines))
