@@ -12,7 +12,7 @@ bibkey.default <- function(x){
 
 #' @export
 bibkey.lazyqmd <- function(x){
-  ref_tag <- unlist(stringr::str_extract_all(x$lines[!x$yaml], "@[[:alnum:]|-]+"))
+  ref_tag <- unlist(stringr::str_extract_all(x$lines[!x$yaml], "@[[:alnum:]|[-|_]]+"))
   ref_tag[!stringr::str_detect(ref_tag, "^@(tbl|sec|fig|eq)-")] %>%
     unique() %>%
     gsub("@", "", .)
