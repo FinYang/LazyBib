@@ -39,4 +39,87 @@ subset_bib <- function(in_file, out_file = NULL, bibkey = NULL, force = FALSE){
     xfun::write_utf8(out_file)
 }
 
+#' @export
+append_bib <- function(in_file, out_file, bibkey = NULL){
+  stopifnot(tools::file_ext(in_file)=="bib")
+  in_bib <- in_file %>%
+    xfun::read_utf8() %>%
+    select_entry() %>%
+    lapply(stringr::str_subset, ".+")
+  stopifnot(all(bibkey %in% names(in_bib)))
+
+  old_bib <- out_file %>%
+    xfun::read_utf8() %>%
+    select_entry() %>%
+    lapply(stringr::str_subset, ".+")
+  if(is.null(bibkey)){
+    out_bib <- c(old_bib, in_bib[setdiff(names(in_bib), names(old_bib))])
+  } else {
+    out_bib <- c(old_bib, in_bib[setdiff(bibkey, names(old_bib))])
+  }
+  out_bib %>%
+    lapply(c, "") %>%
+    unlist() %>%
+    xfun::write_utf8(out_file)
+}
+
+#' @export
+update_bib <- function(in_file, out_file, bibkey = NULL){
+  stopifnot(tools::file_ext(in_file)=="bib")
+  in_bib <- in_file %>%
+    xfun::read_utf8() %>%
+    select_entry() %>%
+    lapply(stringr::str_subset, ".+")
+  stopifnot(all(bibkey %in% names(in_bib)))
+
+  out_bib <- out_file %>%
+    xfun::read_utf8() %>%
+    select_entry() %>%
+    lapply(stringr::str_subset, ".+")
+  stopifnot(all(bibkey %in% names(out_bib)))
+  if(is.null(bibkey)){
+    bibkey <- intersect(names(in_bib), names(out_bib))
+  }
+  out_bib[bibkey] <- in_bib[bibkey]
+  out_bib %>%
+    lapply(c, "") %>%
+    unlist() %>%
+    xfun::write_utf8(out_file)
+}
+
+
+#' @export
+compare_bib <- function(in_file, out_file, bibkey = NULL){
+  stopifnot(tools::file_ext(in_file)=="bib")
+  in_bib <- in_file %>%
+    xfun::read_utf8() %>%
+    select_entry() %>%
+    lapply(stringr::str_subset, ".+")
+  stopifnot(all(bibkey %in% names(in_bib)))
+
+  out_bib <- out_file %>%
+    xfun::read_utf8() %>%
+    select_entry() %>%
+    lapply(stringr::str_subset, ".+")
+  stopifnot(all(bibkey %in% names(out_bib)))
+  if(is.null(bibkey)){
+    bibkey <- intersect(names(in_bib), names(out_bib))
+  }
+  file1 <- tempfile()
+  on.exit(unlink(file1), add = TRUE)
+  file2 <- tempfile()
+  on.exit(unlink(file2), add = TRUE)
+
+  (in_bib[bibkey]) %>%
+    lapply(c, "") %>%
+    unlist() %>%
+    xfun::write_utf8(file1)
+  (out_bib[bibkey]) %>%
+    lapply(c, "") %>%
+    unlist() %>%
+    xfun::write_utf8(file2)
+
+  diff(file1, file2, before = in_file, after = out_file)
+}
+
 
