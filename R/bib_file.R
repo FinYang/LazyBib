@@ -46,12 +46,14 @@ append_bib <- function(in_file, out_file, bibkey = NULL){
     xfun::read_utf8() %>%
     select_entry() %>%
     lapply(stringr::str_subset, ".+")
-  stopifnot(all(bibkey %in% names(in_bib)))
 
   old_bib <- out_file %>%
     xfun::read_utf8() %>%
     select_entry() %>%
     lapply(stringr::str_subset, ".+")
+  if(!all(setdiff(bibkey, names(old_bib)) %in% names(in_bib))) {
+    stop(paste(setdiff(setdiff(bibkey, names(old_bib)),  names(in_bib)), collapse = ", "), " not in ", in_file)
+  }
   if(is.null(bibkey)){
     out_bib <- c(old_bib, in_bib[setdiff(names(in_bib), names(old_bib))])
   } else {
