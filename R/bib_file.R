@@ -12,8 +12,13 @@ bibkey.default <- function(x){
 
 #' @export
 bibkey.lazyqmd <- function(x){
+  key_ignore <- c("tbl", "sec", "fig", "eq",
+                  "thm", "lem", "cor", "prp", "cnj", "def", "exm", "exr"
+                  )
   ref_tag <- unlist(stringr::str_extract_all(x$lines[!x$yaml], "@[[:alnum:]|[-|_]]+"))
-  ref_tag[!stringr::str_detect(ref_tag, "^@(tbl|sec|fig|eq)-")] %>%
+  ref_tag[!stringr::str_detect(
+    ref_tag,
+    paste0("^@(", paste0(key_ignore, collapse = "|"), ")-"))] %>%
     unique() %>%
     gsub("@", "", .)
 }
